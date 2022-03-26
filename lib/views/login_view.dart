@@ -52,7 +52,7 @@ class _LoginViewState extends State<LoginView> {
                   controller: _email,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a username';
+                      return 'Please enter an email address';
                     }
                     RegExp emailValidator = RegExp(
                       r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
@@ -98,7 +98,9 @@ class _LoginViewState extends State<LoginView> {
                       final username = _email.text;
                       final password = _password.text;
 
-                      _formKey.currentState?.validate();
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.pushNamed(context, '/main');
+                      };
                       // TODO: Show dialog with error message
                       // _showDialog('Network Error \n Please check your network connection');
 

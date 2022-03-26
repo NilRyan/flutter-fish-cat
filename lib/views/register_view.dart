@@ -159,8 +159,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   InputDatePickerFormField birthdayFormField() {
     return InputDatePickerFormField(
-
-                  onDateSaved: (value) => _birthday = value,
+                  onDateSaved: (value) {
+                    _birthday = value;
+                  },
                     firstDate: DateTime.utc(1903), lastDate: DateTime.now());
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'views/login_view.dart';
+import 'views/main_view.dart';
 import 'views/register_view.dart';
 
 void main() {
@@ -14,14 +15,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'FishCat Dating App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.pink,
+
       ),
       home: const LoginView(),
       routes: {
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),
+        '/main': (context) => const MainView(),
       },
     );
   }

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.pink,
 
       ),
-      home: const LoginView(),
+      home: const MainView(),
       routes: {
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),

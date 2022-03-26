@@ -8,9 +8,10 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
+  int _index = 0;
 
-  List<Widget> _buildItems() {
-    return [
+
+  List<Widget> _buildItems = [
       Container(
         color: Colors.red,
         child: Text('Find Matches'),
@@ -28,30 +29,41 @@ class _MainViewState extends State<MainView> {
         child: Text('My Profile and Settings'),
       ),
     ];
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Main View'),
-      ),
       body: Center(
-        child: Text('Main View'),
+        child: _buildItems[_index],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home,
-            ),
+            icon: Icon(Icons.monitor_heart),
+            label: 'Find Match',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.favorite),
+            label: 'Matches',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.message),
+            label: 'Messages',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person)),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile'
+          ),
         ],
+        unselectedItemColor: Colors.grey,
+        elevation: 8,
+        selectedItemColor: Colors.pink[800],
+        currentIndex: _index,
+        onTap: (int index) {
+          setState(() {
+            _index = index;
+          });
+        },
       ),
     );
   }

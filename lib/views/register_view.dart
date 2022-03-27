@@ -71,6 +71,7 @@ class _RegisterViewState extends State<RegisterView> {
       ),    );
   }
 
+  // NOTE: Still unsure if using functional widgets is the best way to do this
   Row signIn(BuildContext context) {
     return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -95,7 +96,6 @@ class _RegisterViewState extends State<RegisterView> {
                     final password = _password.text;
                     final birthday = _birthday?.toUtc().toIso8601String();
                     final name = _name.text;
-                    print(_formKey.currentState);
                     // TODO: Show dialog with error message
                     // _showDialog('Network Error \n Please check your network connection');
 
@@ -119,6 +119,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                     return null;
                   },
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
@@ -143,6 +144,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                     return null;
                   },
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
@@ -156,7 +158,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 );
   }
-
+  // TODO: set auto validate to true -> so that validation is done onChange
   InputDatePickerFormField birthdayFormField() {
     return InputDatePickerFormField(
                   onDateSaved: (value) {
@@ -174,6 +176,7 @@ class _RegisterViewState extends State<RegisterView> {
                     }
                     return null;
                   },
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   autofocus: true,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -201,6 +204,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                   return null;
                 },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 autofocus: true,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,

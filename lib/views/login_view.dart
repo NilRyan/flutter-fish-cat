@@ -63,6 +63,7 @@ class _LoginViewState extends State<LoginView> {
 
                     return null;
                   },
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   autofocus: true,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.emailAddress,
@@ -81,6 +82,7 @@ class _LoginViewState extends State<LoginView> {
 
                       return null;
                     },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: _obscureText,
                     decoration: InputDecoration(

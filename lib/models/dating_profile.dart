@@ -1,4 +1,6 @@
 
+import 'celebrity_profile.dart';
+
 class DatingProfile {
   String imageUrl;
   String name;
@@ -6,7 +8,7 @@ class DatingProfile {
   String aboutMe;
   List<CelebrityProfile> celebrityLookAlikes;
 
-  DatingProfile({required this.imageUrl, required this.name, required this.age, required this.aboutMe});
+  DatingProfile({required this.imageUrl, required this.name, required this.age, required this.aboutMe, required this.celebrityLookAlikes});
 
   factory DatingProfile.fromJson(Map<String, dynamic> json) => DatingProfile(
     imageUrl: json["imageUrl"],

@@ -6,16 +6,13 @@ import 'package:flutter/services.dart';
 import '../models/models.dart';
 
 class MockDatingProfileService {
-  MockDatingProfileService();
-  Future<List<DatingProfile>> getDatingProfiles(String id) async {
+  Future<List<DatingProfile>> getDatingProfiles() async {
 
     await Future.delayed(const Duration(milliseconds: 1000));
 
-    // Load json file from disk
-    final dataString = await _loadJsonFile('lib/assets/sample_data/dating_profiles.json');
+    final dataString = await _loadJsonFile('assets/sample_data/dating_profiles.json');
 
-    final List<dynamic> data = json.decode(dataString);
-
+    final data = json.decode(dataString);
     return data.map((json) => DatingProfile.fromJson(json)).toList();
   }
 

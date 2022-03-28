@@ -11,7 +11,7 @@ class DatingProfile {
   List<CelebrityProfile> celebrityLookAlikes;
   Gender gender;
 
-  DatingProfile({required this.userId, required this.imageUrl, required this.name, required this.birthDate, required this.aboutMe, required this.celebrityLookAlikes, required this.gender});
+  DatingProfile({required this.userId, required this.imageUrl, required this.name, required this.birthDate, required this.aboutMe, required this.gender}): celebrityLookAlikes = [];
 
   int get age {
     DateTime dateToday = DateTime.now();
@@ -28,7 +28,7 @@ class DatingProfile {
     name: json["name"],
     birthDate: DateTime.parse(json["birthDay"]),
     aboutMe: json["aboutMe"],
-    celebrityLookAlikes: List<CelebrityProfile>.from(json["celebrityLookAlikes"].map((celeb) => CelebrityProfile.fromJson(celeb))),
+    // celebrityLookAlikes: List<CelebrityProfile>.from(json["celebrityLookAlikes"].map((celeb) => CelebrityProfile.fromJson(celeb))),
     gender: genderFromString(json["gender"])
   );
 

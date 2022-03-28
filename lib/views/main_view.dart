@@ -1,4 +1,7 @@
+import 'package:fish_cat/models/dating_profile.dart';
 import 'package:flutter/material.dart';
+
+import '../api/mock_dating_profile_service.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -10,16 +13,13 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> {
   int _index = 0;
 
-
   List<Widget> _buildItems = [
       Container(
         color: Colors.red,
         child: Text('Find Matches'),
       ),
-      Container(
-        color: Colors.green,
-        child: Text('Matches'),
-      ),
+    MatchesView(),
+
       Container(
         color: Colors.blue,
         child: Text('Messages'),
@@ -66,5 +66,38 @@ class _MainViewState extends State<MainView> {
         },
       ),
     );
+  }
+}
+
+class MatchesView extends StatefulWidget {
+  const MatchesView({Key? key}) : super(key: key);
+
+  @override
+  State<MatchesView> createState() => _MatchesViewState();
+}
+
+class _MatchesViewState extends State<MatchesView> {
+  final mockDatingProfileService = MockDatingProfileService();
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(future: mockDatingProfileService.getDatingProfiles(),
+            builder: (context, AsyncSnapshot<List<DatingProfile>> snapshot) {
+          if (snapshot.hasData) {
+            print(snapshot.data);
+            return ListView.builder(
+                itemCount: snapshot.data?.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(snapshot.data![index].imageUrl),
+                    ),
+                    title: Text(snapshot.data![index].name),
+                    subtitle: Text(snapshot.data![index].age.toString()),
+                  );
+                });
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

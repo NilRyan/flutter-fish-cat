@@ -16,14 +16,9 @@ class DatingProfile {
   int get age {
     DateTime dateToday = DateTime.now();
 
-    if (dateToday.month > birthDate.month ) {
+    if (dateToday.month > birthDate.month
+        || (dateToday.month == birthDate.month && dateToday.day >= birthDate.day) ) {
       return dateToday.year - birthDate.year;
-    }
-
-    if (dateToday.month == birthDate.month) {
-      if (dateToday.day >= birthDate.day) {
-        return dateToday.year - birthDate.year;
-      }
     }
     return dateToday.year - birthDate.year - 1;
   }

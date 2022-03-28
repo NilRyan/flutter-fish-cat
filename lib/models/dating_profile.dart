@@ -29,7 +29,7 @@ class DatingProfile {
     birthDate: DateTime.parse(json["birthDay"]),
     aboutMe: json["aboutMe"],
     celebrityLookAlikes: List<CelebrityProfile>.from(json["celebrityLookAlikes"].map((celeb) => CelebrityProfile.fromJson(celeb))),
-    gender: json["gender"] as Gender
+    gender: genderFromString(json["gender"])
   );
 
 }

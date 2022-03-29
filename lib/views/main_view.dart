@@ -16,17 +16,17 @@ class _MainViewState extends State<MainView> {
   List<Widget> _buildItems = [
       Container(
         color: Colors.red,
-        child: Text('Find Matches'),
+        child: const Text('Find Matches'),
       ),
     MatchesView(),
 
       Container(
         color: Colors.blue,
-        child: Text('Messages'),
+        child: const Text('Messages'),
       ),
       Container(
         color: Colors.yellow,
-        child: Text('My Profile and Settings'),
+        child: const Text('My Profile and Settings'),
       ),
     ];
 
@@ -79,7 +79,7 @@ class MatchesView extends StatelessWidget {
         builder: (context, AsyncSnapshot<List<DatingProfile>> snapshot) {
           // TODO: fix not getting data
           if (snapshot.hasData) {
-            return GridView.builder(gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 4/5), itemBuilder: (context, index) {
+            return GridView.builder(gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 4/5), itemCount: snapshot.data?.length, itemBuilder: (context, index) {
               var datingProfile = snapshot.data![index];
               return Card(
                 margin: const EdgeInsets.all(10),
@@ -92,9 +92,22 @@ class MatchesView extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  child: Stack(
-
-                  )
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(datingProfile.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                            const SizedBox(width: 10),
+                            Text(datingProfile.age.toString(), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                  ],
+                    ),
                 ),
               );
             });

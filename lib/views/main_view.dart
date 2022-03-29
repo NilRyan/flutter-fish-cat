@@ -69,19 +69,15 @@ class _MainViewState extends State<MainView> {
   }
 }
 
-class MatchesView extends StatefulWidget {
-  const MatchesView({Key? key}) : super(key: key);
+class MatchesView extends StatelessWidget {
+  MatchesView({Key? key}) : super(key: key);
 
-  @override
-  State<MatchesView> createState() => _MatchesViewState();
-}
-
-class _MatchesViewState extends State<MatchesView> {
   final mockDatingProfileService = MockDatingProfileService();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: mockDatingProfileService.getDatingProfiles(),
-            builder: (context, AsyncSnapshot<List<DatingProfile>> snapshot) {
+        builder: (context, AsyncSnapshot<List<DatingProfile>> snapshot) {
+          // TODO: fix not getting data
           if (snapshot.hasData) {
             print(snapshot.data);
             return ListView.builder(

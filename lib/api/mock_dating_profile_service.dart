@@ -13,10 +13,14 @@ class MockDatingProfileService {
     final dataString = await _loadJsonFile('assets/sample_data/dating_profiles.json');
 
     final data = json.decode(dataString);
-    return data.map((json) => DatingProfile.fromJson(json)).toList();
+    final profiles = <DatingProfile>[];
+    data.forEach((profile) {
+      profiles.add(DatingProfile.fromJson(profile));
+    });
+    return profiles;
   }
 
   Future<String> _loadJsonFile(String fileName) async {
-    return await rootBundle.loadString(fileName);
+    return rootBundle.loadString(fileName);
   }
 }

@@ -79,21 +79,31 @@ class MatchesView extends StatelessWidget {
         builder: (context, AsyncSnapshot<List<DatingProfile>> snapshot) {
           // TODO: fix not getting data
           if (snapshot.hasData) {
-            print(snapshot.data);
-            return ListView.builder(
-                itemCount: snapshot.data?.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(snapshot.data![index].imageUrl),
+            return GridView.builder(gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 4/5), itemBuilder: (context, index) {
+              var datingProfile = snapshot.data![index];
+              return Card(
+                margin: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
+                      image: NetworkImage(datingProfile.imageUrl),
+                      fit: BoxFit.fill,
                     ),
-                    title: Text(snapshot.data![index].name),
-                    subtitle: Text(snapshot.data![index].age.toString()),
-                  );
-                });
+                  ),
+                  child: Stack(
+
+                  )
+                ),
+              );
+            });
           } else {
             return const Center(child: CircularProgressIndicator());
           }
         });
   }
 }
+
+
+

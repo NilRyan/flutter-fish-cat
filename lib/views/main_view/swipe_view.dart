@@ -47,11 +47,14 @@ class SwipeView extends StatelessWidget {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(datingProfile.aboutMe, style: const TextStyle(fontSize: 12, color: Colors.white)),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(left: 16.0, bottom: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
-
                       Text('Philip John Calape - 60%', style: TextStyle(fontSize: 15, color: Colors.white)),
                       Text('John Lloyd Cruz - 95%', style: TextStyle(fontSize: 15, color: Colors.white)),
                       Text('Meowth - 10%', style: TextStyle(fontSize: 15, color: Colors.white)),

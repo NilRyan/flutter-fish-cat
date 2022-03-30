@@ -1,7 +1,9 @@
 import 'package:fish_cat/models/dating_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:swipable_stack/swipable_stack.dart';
 
 import '../api/mock_dating_profile_service.dart';
+import 'main_view/matches_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -14,12 +16,8 @@ class _MainViewState extends State<MainView> {
   int _index = 0;
 
   List<Widget> _buildItems = [
-      Container(
-        color: Colors.red,
-        child: const Text('Find Matches'),
-      ),
+      SwipeView(),
     MatchesView(),
-
       Container(
         color: Colors.blue,
         child: const Text('Messages'),
@@ -69,54 +67,48 @@ class _MainViewState extends State<MainView> {
   }
 }
 
-class MatchesView extends StatelessWidget {
-  MatchesView({Key? key}) : super(key: key);
+class SwipeView extends StatelessWidget {
+  final _datingProfileService = MockDatingProfileService();
+  SwipeView({Key? key}) : super(key: key);
 
-  final mockDatingProfileService = MockDatingProfileService();
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: mockDatingProfileService.getDatingProfiles(),
-        builder: (context, AsyncSnapshot<List<DatingProfile>> snapshot) {
-          // TODO: fix not getting data
-          if (snapshot.hasData) {
-            return GridView.builder(gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 4/5), itemCount: snapshot.data?.length, itemBuilder: (context, index) {
-              var datingProfile = snapshot.data![index];
-              return Card(
-                margin: const EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      image: NetworkImage(datingProfile.imageUrl),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(datingProfile.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                            const SizedBox(width: 10),
-                            Text(datingProfile.age.toString(), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                  ],
-                    ),
-                ),
-              );
-            });
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+    return FutureBuilder(builder: (context, AsyncSnapshot<List<DatingProfile>> snapshot) {
+      if (snapshot.hasData) {
+        final profiles = snapshot.data;
+        return SwipableStack(builder: (context, properties) {
+          // TODO: implement api integration on swipe
+          return Container(
+            margin: const EdgeInsets.only(
+              top: 100,
+              left: 16,
+              right: 16,
+              bottom: 16
+            ),
+              decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                image: NetworkImage(profiles![properties.index].imageUrl),
+                fit: BoxFit.fill,
+          ),
+          ),
+          );
+        },
+        itemCount: profiles!.length,
+        onSwipeCompleted: (index, direction) {
+          print('$index $direction');
+        },
+        );
+      } else {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+    }, future: _datingProfileService.getDatingProfiles());
   }
 }
+
+
 
 
 

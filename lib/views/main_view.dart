@@ -5,6 +5,7 @@ import 'package:swipable_stack/swipable_stack.dart';
 
 import '../api/mock_dating_profile_service.dart';
 import 'main_view/matches_view.dart';
+import 'main_view/profile_view.dart';
 import 'main_view/swipe_view.dart';
 
 class MainView extends StatefulWidget {
@@ -24,7 +25,7 @@ class _MainViewState extends State<MainView> {
         color: Colors.blue,
         child: const Text('Messages'),
       ),
-      ProfileView(),
+      const ProfileView(),
     ];
 
   @override
@@ -66,35 +67,7 @@ class _MainViewState extends State<MainView> {
   }
 }
 
-class ProfileView extends StatelessWidget {
-  const ProfileView({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        const Text('Profile Details'),
-        Column(
-          children: const [
-            Text('Name'),
-            Text('Age'),
-            Text('Location'),
-            Text('About Me'),
-          ],
-        ),
-        SizedBox(
-          width: 150,
-          child: ElevatedButton(
-            onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-          }, child: const Text('Logout'),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 
 

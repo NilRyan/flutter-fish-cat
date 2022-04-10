@@ -1,6 +1,6 @@
 # fish_cat
 
-A dating app with a twist
+A dating app with a cat and a fish
 
 ## Features
 - Walkthrough / Swipeable Cards

@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   swipable_stack: ^1.2.0
   introduction_screen: ^3.0.2
+  flutter_secure_storage: ^5.0.2
 
 dev_dependencies:
   flutter_test:

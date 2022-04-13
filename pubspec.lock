@@ -198,6 +198,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.13.1"
+  gql_dedupe_link:
+    dependency: transitive
+    description:
+      name: gql_dedupe_link
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  gql_error_link:
+    dependency: transitive
+    description:
+      name: gql_error_link
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   gql_exec:
     dependency: transitive
     description:
@@ -205,6 +219,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  gql_http_link:
+    dependency: transitive
+    description:
+      name: gql_http_link
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   gql_link:
     dependency: transitive
     description:
@@ -212,6 +233,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
+  gql_transform_link:
+    dependency: transitive
+    description:
+      name: gql_transform_link
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
+  graphql:
+    dependency: "direct main"
+    description:
+      name: graphql
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.1-beta.2"
   hive:
     dependency: transitive
     description:
@@ -219,6 +254,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.4"
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   introduction_screen:
     dependency: "direct main"
     description:
@@ -371,6 +420,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.6"
   vector_math:
     dependency: transitive
     description:
@@ -378,6 +434,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  web_socket_channel:
+    dependency: transitive
+    description:
+      name: web_socket_channel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
 sdks:
   dart: ">=2.16.1 <3.0.0"
   flutter: ">=2.0.0"

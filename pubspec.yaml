@@ -40,6 +40,7 @@ dependencies:
   ferry: ^0.10.4
   riverpod: ^1.0.3
   flutter_hooks: ^0.18.3
+  graphql: ^5.0.1-beta.2
 
 dev_dependencies:
   flutter_test:

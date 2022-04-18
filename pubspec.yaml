@@ -37,7 +37,6 @@ dependencies:
   swipable_stack: ^1.2.0
   introduction_screen: ^3.0.2
   flutter_secure_storage: ^5.0.2
-  ferry: ^0.10.4
   riverpod: ^1.0.3
   flutter_hooks: ^0.18.3
   graphql: ^5.0.1-beta.2

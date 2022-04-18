@@ -1,3 +1,4 @@
+import 'package:fish_cat/graphql/graphql_view.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -15,18 +16,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FishCat Dating App',
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
+    return ClientProvider(
+      uri: 'https://nestjs-fish-cat.herokuapp.com/graphql',
+      child: MaterialApp(
+        title: 'FishCat Dating App',
+        theme: ThemeData(
+          primarySwatch: Colors.pink,
 
+        ),
+        home: IntroView(),
+        routes: {
+          '/login': (context) => const LoginView(),
+          '/register': (context) => const RegisterView(),
+          '/main': (context) => const MainView(),
+        },
       ),
-      home: IntroView(),
-      routes: {
-        '/login': (context) => const LoginView(),
-        '/register': (context) => const RegisterView(),
-        '/main': (context) => const MainView(),
-      },
     );
   }
 }

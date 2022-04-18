@@ -39,7 +39,7 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   riverpod: ^1.0.3
   flutter_hooks: ^0.18.3
-  graphql: ^5.0.1-beta.2
+  graphql_flutter: ^5.1.0
 
 dev_dependencies:
   flutter_test:

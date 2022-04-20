@@ -1,12 +1,14 @@
 import 'package:fish_cat/graphql/graphql_view.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import 'views/login_view.dart';
 import 'views/main_view.dart';
 import 'views/register_view.dart';
 
-void main() {
+void main() async {
+  await initHiveForFlutter();
   runApp(const MyApp());
 }
 

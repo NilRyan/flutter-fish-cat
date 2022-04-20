@@ -16,8 +16,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // TODO: make backend an env variable and add separate subscription endpoint
     return ClientProvider(
       uri: 'https://nestjs-fish-cat.herokuapp.com/graphql',
+      subscriptionUri: 'https://nestjs-fish-cat.herokuapp.com/graphql',
       child: MaterialApp(
         title: 'FishCat Dating App',
         theme: ThemeData(

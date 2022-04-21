@@ -15,7 +15,7 @@ GraphQL
 
 State Management
   - https://pub.dev/packages/hooks_riverpod
-  - https://pub.dev/packages/flutter_hooks/install
+  - https://pub.dev/packages/flutter_hooks
 
 ## Design Assets & Materials
 [StreamlineHQ](https://www.streamlinehq.com)

@@ -1,15 +1,13 @@
 
-import 'package:fish_cat/models/dating_profile.dart';
 import 'package:flutter/material.dart';
-import 'package:swipable_stack/swipable_stack.dart';
 
-import '../api/mock_dating_profile_service.dart';
 import 'main_view/matches_view.dart';
 import 'main_view/profile_view.dart';
 import 'main_view/swipe_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
+  static const String routeName = '/main';
 
   @override
   _MainViewState createState() => _MainViewState();

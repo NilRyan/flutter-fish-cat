@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'login_view.dart';
+
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
+  static const String routeName = '/register';
 
   @override
   _RegisterViewState createState() => _RegisterViewState();
@@ -79,7 +82,7 @@ class _RegisterViewState extends State<RegisterView> {
                     const Text('Already have an account?'),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/login');
+                        Navigator.pushNamed(context, LoginView.routeName);
                       },
                       child: const Text('Sign in'),
                     ),

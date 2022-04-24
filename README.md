@@ -11,9 +11,11 @@ A dating app with a cat and a fish
 
 ## Dependencies
 GraphQL
-- https://pub.dev/packages/ferry/install
+  - https://pub.dev/packages/graphql_flutter
+
 State Management
--https://pub.dev/packages/riverpod/install
+  - https://pub.dev/packages/hooks_riverpod
+  - https://pub.dev/packages/flutter_hooks
 
 ## Design Assets & Materials
 [StreamlineHQ](https://www.streamlinehq.com)

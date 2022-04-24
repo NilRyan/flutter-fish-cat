@@ -1,41 +1,61 @@
-import 'package:fish_cat/views/login_view/login_mutation.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
-
-  @override
-  _LoginViewState createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
+class LoginView extends HookWidget {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-  bool _obscureText = true;
+  LoginView({Key? key}) : super(key: key);
 
-  @override
-  void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final emailController = useTextEditingController(text: '');
+    final passwordController = useTextEditingController(text: '');
+    final loginMutation = useMutation(
+        MutationOptions(
+          document: gql(
+            '''
+          mutation Login(\$email: String!, \$password: String!) {
+            login(loginInput: {email: \$email, password: \$password}) {
+              accessToken
+              refreshToken
+            }
+          }
+          ''',
+          ),
+          onCompleted: (dynamic data) {
+            if (data != null) {
+              print(data);
+              Navigator.pushNamed(context, '/main');
+            };
+          },
+        )
+    );
+
+    final _areFieldsEmpty =
+    useState<bool>(true);
+    final _obscureText = useState<bool>(true);
+    bool areFieldsEmpty() {
+      return emailController.text.toString().isEmpty ||
+          passwordController.text.toString().isEmpty;
+    }
+    void _toggleObscureText() {
+      _obscureText.value = !_obscureText.value;
+    }
+
+    useEffect(() {
+      emailController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      passwordController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      return null;
+    }, [
+      emailController,
+      passwordController,
+    ]);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       // TODO: Add a background image for FishCat
@@ -50,7 +70,7 @@ class _LoginViewState extends State<LoginView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ...[TextFormField(
-                  controller: _email,
+                  controller: emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter an email address';
@@ -75,7 +95,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                   TextFormField(
-                    controller: _password,
+                    controller: passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a password';
@@ -85,33 +105,34 @@ class _LoginViewState extends State<LoginView> {
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     keyboardType: TextInputType.visiblePassword,
-                    obscureText: _obscureText,
+                    obscureText: _obscureText.value,
                     decoration: InputDecoration(
                       filled: true,
                       hintText: 'Your password',
                       labelText: 'Password',
                       suffixIcon: IconButton(
-                        icon: _obscureText ? const Icon(Icons.visibility_off) : const Icon(Icons.remove_red_eye),
-                        onPressed: _togglePasswordVisibility,
+                        icon: _obscureText.value ? const Icon(Icons.visibility_off) : const Icon(Icons.remove_red_eye),
+                        onPressed: _toggleObscureText,
                       ),
                     ),
                   ),
-                  ElevatedButton(
+                  _areFieldsEmpty.value ? const ElevatedButton(onPressed: null, child: Text('Login')) : ElevatedButton(
+
                     onPressed: () {
-                      final username = _email.text;
-                      final password = _password.text;
 
                       if (_formKey.currentState!.validate()) {
                         Navigator.pushNamed(context, '/main');
                       };
                       // TODO: Show dialog with error message
                       // _showDialog('Network Error \n Please check your network connection');
-
-                      print('$username, $password');
+                      loginMutation.runMutation({
+                        'email': emailController.text,
+                        'password': passwordController.text,
+                      });
                     },
                     child: const Text('Login'),
                   ),
-                  LoginMutation(),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -129,18 +150,17 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),    );
   }
-  void _showDialog(String message) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(message),
-        actions: [
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
+  // void _showDialog(String message) {
+  //   showDialog<void>(
+  //     builder: (context) => AlertDialog(
+  //       title: Text(message),
+  //       actions: [
+  //         TextButton(
+  //           child: const Text('OK'),
+  //           onPressed: () => Navigator.of(context).pop(),
+  //         ),
+  //       ],
+  //     ),
+  //   );
   }
-}
+

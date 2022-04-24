@@ -1,3 +1,4 @@
+import 'package:fish_cat/views/login_view/login_mutation.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -110,6 +111,7 @@ class _LoginViewState extends State<LoginView> {
                     },
                     child: const Text('Login'),
                   ),
+                  LoginMutation(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -11,4 +11,7 @@ class SecureStorage {
   static Future<String?> getToken() async =>
       await _storage.read(key: _keyToken);
 
+  static Future<void> deleteToken() async =>
+      await _storage.delete(key: _keyToken);
+
 }

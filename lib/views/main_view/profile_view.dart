@@ -1,3 +1,4 @@
+import 'package:fish_cat/storage/secure_storage.dart';
 import 'package:flutter/material.dart';
 
 class ProfileView extends StatelessWidget {
@@ -20,7 +21,8 @@ class ProfileView extends StatelessWidget {
         SizedBox(
           width: 150,
           child: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              await SecureStorage.deleteToken();
               Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
             }, child: const Text('Logout'),
           ),

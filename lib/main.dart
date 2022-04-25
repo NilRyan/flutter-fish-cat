@@ -9,6 +9,7 @@ import 'views/main_view.dart';
 import 'views/register_view.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
   runApp(const MyApp());
 }

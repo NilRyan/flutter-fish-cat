@@ -1,3 +1,4 @@
+import 'package:fish_cat/storage/secure_storage.dart';
 import 'package:fish_cat/views/main_view.dart';
 import 'package:fish_cat/views/register_view.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,10 @@ class LoginView extends HookWidget {
           }
           ''',
       ),
-      onCompleted: (dynamic data) {
+      onCompleted: (dynamic data) async {
         if (data != null) {
-          print(data);
+          final accessToken = data['login']['accessToken'];
+          await SecureStorage.setToken(accessToken);
           Navigator.pushNamed(context, MainView.routeName);
         }
         ;

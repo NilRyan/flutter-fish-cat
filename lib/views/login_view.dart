@@ -160,16 +160,4 @@ class LoginView extends HookWidget {
       ),
     );
   }
-  // void _showDialog(String message) {
-  //   showDialog<void>(
-  //     builder: (context) => AlertDialog(
-  //       title: Text(message),
-  //       actions: [
-  //         TextButton(
-  //           child: const Text('OK'),
-  //           onPressed: () => Navigator.of(context).pop(),
-  //         ),
-  //       ],
-  //     ),
-  //   );
 }

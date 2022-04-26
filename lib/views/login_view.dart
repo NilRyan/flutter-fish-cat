@@ -14,6 +14,7 @@ class LoginView extends HookWidget {
   Widget build(BuildContext context) {
     final emailController = useTextEditingController(text: '');
     final passwordController = useTextEditingController(text: '');
+    final _errorMessage = useState<String?>(null);
     final loginMutation = useMutation(MutationOptions(
       document: gql(
         '''
@@ -30,13 +31,17 @@ class LoginView extends HookWidget {
           final accessToken = data['login']['accessToken'];
           await SecureStorage.setToken(accessToken);
           Navigator.pushNamed(context, MainView.routeName);
+        } else {
+          _errorMessage.value = 'Invalid email or password';
         }
-        ;
+
+
       },
     ));
 
     final _areFieldsEmpty = useState<bool>(true);
     final _obscureText = useState<bool>(true);
+
     bool areFieldsEmpty() {
       return emailController.text.toString().isEmpty ||
           passwordController.text.toString().isEmpty;
@@ -108,6 +113,7 @@ class LoginView extends HookWidget {
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: _obscureText.value,
                 decoration: InputDecoration(
+                  errorText: _errorMessage.value,
                   filled: true,
                   hintText: 'Your password',
                   labelText: 'Password',

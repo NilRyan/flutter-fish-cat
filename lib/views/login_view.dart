@@ -129,12 +129,6 @@ class LoginView extends HookWidget {
                   ? const ElevatedButton(onPressed: null, child: Text('Login'))
                   : ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          Navigator.pushNamed(context, MainView.routeName);
-                        }
-                        ;
-                        // TODO: Show dialog with error message
-                        // _showDialog('Network Error \n Please check your network connection');
                         loginMutation.runMutation({
                           'email': emailController.text,
                           'password': passwordController.text,

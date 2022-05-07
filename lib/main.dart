@@ -1,7 +1,6 @@
 import 'package:fish_cat/graphql/graphql_view.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 
 import 'views/intro_view.dart';
 import 'views/login_view.dart';
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
         home: IntroView(),
         routes: {
           LoginView.routeName: (context) =>  LoginView(),
-          RegisterView.routeName: (context) => const RegisterView(),
+          RegisterView.routeName: (context) => RegisterView(),
           MainView.routeName: (context) => const MainView(),
         },
       ),

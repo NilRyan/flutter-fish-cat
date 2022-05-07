@@ -35,6 +35,9 @@ design-materials/
 # Web related
 lib/generated_plugin_registrant.dart
 
+# Commitizen
+node_modules
+
 # Symbolication related
 app.*.symbols
 

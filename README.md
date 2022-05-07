@@ -1,5 +1,5 @@
 # fish_cat
-
+Just trying out and experimenting with flutter.
 A dating app with a cat and a fish
 
 ## Features
@@ -7,7 +7,6 @@ A dating app with a cat and a fish
 - Login and Sign Up
 - Tinder Like swiping
 - Real Time Chat
-- Profile Page
 
 ## Dependencies
 GraphQL

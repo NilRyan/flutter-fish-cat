@@ -1,49 +1,125 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
+import '../storage/secure_storage.dart';
 import 'login_view.dart';
+import 'main_view.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key}) : super(key: key);
+class RegisterView extends HookWidget {
+  RegisterView({Key? key}) : super(key: key);
   static const String routeName = '/register';
-
-  @override
-  _RegisterViewState createState() => _RegisterViewState();
-}
-
-class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-  late final TextEditingController _confirmPassword;
-  late final TextEditingController _name;
-  DateTime? _birthday;
-  bool _obscureText = true;
 
-  @override
-  void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-    _confirmPassword = TextEditingController();
-    _name = TextEditingController();
-    super.initState();
-  }
 
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    _confirmPassword.dispose();
-    _name.dispose();
-    super.dispose();
-  }
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
   @override
   Widget build(BuildContext context) {
+    final emailController = useTextEditingController(text: '');
+    final nameController = useTextEditingController(text: '');
+    final passwordController = useTextEditingController(text: '');
+    final confirmPasswordController = useTextEditingController(text: '');
+    final _birthday = useState('');
+
+    final loginMutation = useMutation(MutationOptions(
+      document: gql(
+        '''
+          mutation Login(\$email: String!, \$password: String!) {
+            login(loginInput: {email: \$email, password: \$password}) {
+              accessToken
+              refreshToken
+            }
+          }
+          ''',
+      ),
+      onError: (err) {
+        print(err);
+      },
+      onCompleted: (dynamic data) async {
+        if (data != null) {
+          final accessToken = data['login']['accessToken'];
+          await SecureStorage.setToken(accessToken);
+          Navigator.pushNamed(context, MainView.routeName);
+        } else {
+          print('Something wrong has occured. Please try again');
+        }
+      },
+    ));
+    final registerMutation = useMutation(MutationOptions(
+      document: gql(
+        '''
+          mutation Register(\$email: String!, \$password: String!, \$name: String!, \$birthDate: DateTime!, \$aboutMe: String!) {
+            register(registerUserInput: {email: \$email, password: \$password, name: \$name, birthDate: \$birthDate, aboutMe: \$aboutMe}) {
+              id
+              email
+              birthDate
+              aboutMe
+              name
+            }
+          }
+          ''',
+      ),
+      onError: (err) {
+        print(err);
+      },
+      onCompleted: (dynamic data) async {
+        if (data != null) {
+          final name = data['register']['name'];
+          loginMutation.runMutation({
+            'email': emailController.text,
+            'password': passwordController.text,
+          });
+          print(name);
+        } else {
+          print('Something wrong has occured. Please try again');
+        }
+      },
+    ));
+
+
+    final _areFieldsEmpty = useState<bool>(true);
+    final _obscureText = useState<bool>(true);
+
+    bool areFieldsEmpty() {
+      return emailController.text.toString().isEmpty ||
+          nameController.text.toString().isEmpty ||
+          passwordController.text.toString().isEmpty ||
+          confirmPasswordController.text.toString().isEmpty ||
+          _birthday.value.isEmpty;
+    }
+    useEffect(() {
+      emailController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      passwordController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      nameController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      confirmPasswordController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      _birthday.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      return null;
+    }, [
+      emailController,
+      passwordController,
+      nameController,
+      confirmPasswordController,
+      _birthday
+    ]);
+
+
+
+    void _toggleObscureText() {
+      _obscureText.value = !_obscureText.value;
+    }
+
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -61,175 +137,151 @@ class _RegisterViewState extends State<RegisterView> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ...[emailFormField(),
-                  nameFormField(),
-                  birthdayFormField(),
-                  passwordFormField(),
-                  confirmPasswordFormField(),
-                  registerButton(),
-                  signIn(context),
-                ].expand((widget) => [widget, const SizedBox(height: 20.0)]),]
-          ),
-        ),
-      ),    );
-  }
-
-  // NOTE: Still unsure if using functional widgets is the best way to do this
-  Row signIn(BuildContext context) {
-    return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account?'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, LoginView.routeName);
-                      },
-                      child: const Text('Sign in'),
-                    ),
-                  ],
-                );
-  }
-
-  ElevatedButton registerButton() {
-    return ElevatedButton(
-                  onPressed: () {
-                    _formKey.currentState?.validate();
-                    _formKey.currentState?.save();
-                    final username = _email.text;
-                    final password = _password.text;
-                    final birthday = _birthday?.toUtc().toIso8601String();
-                    final name = _name.text;
-                    // TODO: Show dialog with error message
-                    // _showDialog('Network Error \n Please check your network connection');
-
-                    print('$username, $password, $birthday, $name');
-                  },
-                  child: const Text('Register'),
-                );
-  }
-
-  TextFormField confirmPasswordFormField() {
-    return TextFormField(
-                  controller: _confirmPassword,
+                ...[ TextFormField(
+                  controller: emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
+                      return 'Please enter a valid email';
+                    }
+                    RegExp emailValidator = RegExp(
+                      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
+                    );
+                    if (!emailValidator.hasMatch(value)) {
+                      return 'Please enter a valid email address';
                     }
 
-                    if (value != _password.text) {
-                      return 'Passwords do not match';
-                    }
-
-                    return null;
-                  },
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: _obscureText,
-                  decoration: InputDecoration(
-                    filled: true,
-                    hintText: 'Confirm your password',
-                    labelText: 'Confirm Password',
-                    suffixIcon: IconButton(
-                      icon: _obscureText ? const Icon(Icons.visibility_off) : const Icon(Icons.remove_red_eye),
-                      onPressed: _togglePasswordVisibility,
-                    ),
-                  ),
-                );
-  }
-
-  TextFormField passwordFormField() {
-    return TextFormField(
-                  controller: _password,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-
-                    return null;
-                  },
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: _obscureText,
-                  decoration: InputDecoration(
-                    filled: true,
-                    hintText: 'Your password',
-                    labelText: 'Password',
-                    suffixIcon: IconButton(
-                      icon: _obscureText ? const Icon(Icons.visibility_off) : const Icon(Icons.remove_red_eye),
-                      onPressed: _togglePasswordVisibility,
-                    ),
-                  ),
-                );
-  }
-  // TODO: set auto validate to true -> so that validation is done onChange
-  InputDatePickerFormField birthdayFormField() {
-    return InputDatePickerFormField(
-                  onDateSaved: (value) {
-                    _birthday = value;
-                  },
-                    firstDate: DateTime.utc(1903), lastDate: DateTime.now());
-  }
-
-  TextFormField nameFormField() {
-    return TextFormField(
-                 controller: _name,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
-                    }
                     return null;
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   autofocus: true,
                   textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     filled: true,
-                    hintText: 'Your name',
-                    labelText: 'Name',
+                    hintText: 'Your email address',
+                    labelText: 'Email',
                   ),
-                );
-  }
-
-  TextFormField emailFormField() {
-    return TextFormField(
-                controller: _email,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a valid email';
-                  }
-                  RegExp emailValidator = RegExp(
-                    r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
-                  );
-                  if (!emailValidator.hasMatch(value)) {
-                    return 'Please enter a valid email address';
-                  }
-
-                  return null;
-                },
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                autofocus: true,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  filled: true,
-                  hintText: 'Your email address',
-                  labelText: 'Email',
                 ),
-              );
-  }
-  void _showDialog(String message) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(message),
-        actions: [
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
+                  TextFormField(
+                    controller: nameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autofocus: true,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      hintText: 'Your name',
+                      labelText: 'Name',
+                    ),
+                  ),
+                  InputDatePickerFormField(
+                      onDateSaved: (value) {
+                        _birthday.value = value.toIso8601String();
+                      },
+                      firstDate: DateTime.utc(1903), lastDate: DateTime.now()),
+                  TextFormField(
+                    controller: passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: _obscureText.value,
+                    decoration: InputDecoration(
+                      filled: true,
+                      hintText: 'Your password',
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: _obscureText.value
+                            ? const Icon(Icons.visibility_off)
+                            : const Icon(Icons.remove_red_eye),
+                        onPressed: _toggleObscureText,
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    controller: confirmPasswordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+
+                      if (value != passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: _obscureText.value,
+                    decoration: InputDecoration(
+                      filled: true,
+                      hintText: 'Confirm your password',
+                      labelText: 'Confirm Password',
+                      suffixIcon: IconButton(
+                        icon: _obscureText.value ? const Icon(Icons.visibility_off) : const Icon(
+                            Icons.remove_red_eye),
+                        onPressed: _toggleObscureText,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      _formKey.currentState?.validate();
+                      _formKey.currentState?.save();
+
+                      registerMutation.runMutation({
+                        'email': emailController.text,
+                        'password': passwordController.text,
+                        'birthDate': _birthday.value,
+                        'name': nameController.text,
+                        'aboutMe': 'Default aboutMe cause I made a mistake making this field required'
+                      });
+
+                      // TODO: Show dialog with error message
+                      // _showDialog('Network Error \n Please check your network connection');
+
+                      // print('$username, $password, $birthday, $name');
+                    },
+                    child: const Text('Register'),
+                  ),
+                  signIn(context),
+                ].expand((widget) => [widget, const SizedBox(height: 20.0)]),
+              ]
           ),
-        ],
-      ),
+        ),
+      ),);
+  }
+
+  // NOTE: Still unsure if using functional widgets is the best way to do this
+  Row signIn(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('Already have an account?'),
+        TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, LoginView.routeName);
+          },
+          child: const Text('Sign in'),
+        ),
+      ],
     );
   }
+
+
+
+
+
 }

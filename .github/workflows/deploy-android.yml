@@ -21,6 +21,14 @@ jobs:
           fileName: "app_keystore.jks"
           encodedString: ${{ secrets.KEYSTORE }}
 
+      - name: Create google-services.json
+        run: cat /home/runner/work/flutter-fish-cat/flutter-fish-cat/android/app/google-services.json | base64
+
+      - name: Put data in google-services.json
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA > /home/runner/work/flutter-fish-cat/flutter-fish-cat/android/app/google-services.json
+
       - name: Build
         run: flutter build apk
         env:

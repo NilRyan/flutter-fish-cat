@@ -7,9 +7,11 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class LoginView extends HookWidget {
   final _formKey = GlobalKey<FormState>();
+
   LoginView({Key? key}) : super(key: key);
 
   static const routeName = '/login';
+
   @override
   Widget build(BuildContext context) {
     final emailController = useTextEditingController(text: '');
@@ -34,8 +36,6 @@ class LoginView extends HookWidget {
         } else {
           _errorMessage.value = 'Invalid email or password';
         }
-
-
       },
     ));
 

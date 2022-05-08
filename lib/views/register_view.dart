@@ -40,7 +40,7 @@ class RegisterView extends HookWidget {
         if (data != null) {
           final accessToken = data['login']['accessToken'];
           await SecureStorage.setToken(accessToken);
-          Navigator.pushNamed(context, MainView.routeName);
+          Navigator.pushNamedAndRemoveUntil(context, MainView.routeName, (route) => false);
         } else {
           print('Something wrong has occured. Please try again');
         }

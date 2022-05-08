@@ -1,4 +1,5 @@
 import 'package:fish_cat/graphql/graphql_view.dart';
+import 'package:fish_cat/storage/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.pink,
 
         ),
-        home: IntroView(),
+        home: SecureStorage.tokenExists() ? const MainView() : IntroView(),
         routes: {
           LoginView.routeName: (context) =>  LoginView(),
           RegisterView.routeName: (context) => RegisterView(),

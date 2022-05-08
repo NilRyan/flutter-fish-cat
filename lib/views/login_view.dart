@@ -32,7 +32,7 @@ class LoginView extends HookWidget {
         if (data != null) {
           final accessToken = data['login']['accessToken'];
           await SecureStorage.setToken(accessToken);
-          Navigator.pushNamed(context, MainView.routeName);
+          Navigator.pushNamedAndRemoveUntil(context, MainView.routeName, (route) => false);
         } else {
           _errorMessage.value = 'Invalid email or password';
         }

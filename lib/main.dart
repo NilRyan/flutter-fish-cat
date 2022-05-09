@@ -8,14 +8,19 @@ import 'views/login_view.dart';
 import 'views/main_view.dart';
 import 'views/register_view.dart';
 
+Future <Widget> selectStartPage () async {
+  final String? token = await SecureStorage.getToken();
+  return token == null || token.isEmpty ? IntroView(): const MainView();
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
-  runApp(const MyApp());
+  runApp( MyApp(startPage: await selectStartPage()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  Widget startPage;
+  MyApp({Key? key, required this.startPage}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -30,7 +35,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.pink,
 
         ),
-        home: SecureStorage.tokenExists() ? const MainView() : IntroView(),
+        home: startPage,
         routes: {
           LoginView.routeName: (context) =>  LoginView(),
           RegisterView.routeName: (context) => RegisterView(),
